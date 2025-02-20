@@ -1,5 +1,5 @@
 {
-    "reserva": [
+    "reserves": [
         {
             "id_reserva" : 1,
             "estat" : "Activa",

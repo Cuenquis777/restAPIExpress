@@ -1,0 +1,28 @@
+{
+  "name": "restapiexpress",
+  "version": "1.0.0",
+  "main": "indexusuarios.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "express": "^4.21.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Cuenquis777/restAPIExpress.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Cuenquis777/restAPIExpress/issues"
+  },
+  "homepage": "https://github.com/Cuenquis777/restAPIExpress#readme",
+  "description": "",
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

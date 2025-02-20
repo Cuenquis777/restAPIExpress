@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 // Usamos try catch para manejar errores a la hora de leer el archivo
 const readData = () => {
     try {
-        const data = fs.readFileSync("./db.json");
+        const data = fs.readFileSync("./DB/reserves.json");
         // Convertimos el archivo a json
         return JSON.parse(data);
     } catch (error) {
@@ -27,7 +27,7 @@ const readData = () => {
 // Usamos try catch para manejar errores a la hora de escribir el archivo
 const writeData = (data) => {
     try {
-        fs.writeFileSync("./db.json", JSON.stringify(data));
+        fs.writeFileSync("./DB/reserves.json", JSON.stringify(data));
     } catch (error) {
         console.error(error);
     }
@@ -44,17 +44,17 @@ app.listen(3000, () => {
     console.log("Servidor iniciado en el puerto 3000");
 });
 
-app.get("/books", (req, res) => {
+app.get("/reserves", (req, res) => {
     const data = readData();
     res.json(data.books);
 });
 
-app.get("/books/:id", (req, res) => {
+app.get("/reserves/:id", (req, res) => {
     const data = readData();
     //Extraiem l'id de l'url recordem que req es un objecte tipus requests
     // que conté l'atribut params i el podem consultar
     const id = parseInt(req.params.id);
-    const book = data.books.find((book) => book.id === id);
+    const reserva = data.reserves.find(() => book.id === id);
     res.json(book);
 });
 
