@@ -1,4 +1,3 @@
-
 // Importar librerias
 import express from "express";
 import fs from "fs";
@@ -9,7 +8,6 @@ const app = express();
 
 // Esta linia escuchara y convertira en archivos json
 app.use(bodyParser.json());
-
 
 // Usamos try catch para manejar errores a la hora de leer el archivo
 const readData = () => {
@@ -22,8 +20,6 @@ const readData = () => {
     }
 };
 
-
-
 // Usamos try catch para manejar errores a la hora de escribir el archivo
 const writeData = (data) => {
     try {
@@ -32,7 +28,6 @@ const writeData = (data) => {
         console.error(error);
     }
 };
-
 
 // Cuando alguien llegue a la ruta "/", le devolveremos un mensaje
 app.get("/", (req, res) => {
@@ -46,7 +41,7 @@ app.listen(3000, () => {
 
 app.get("/reserves", (req, res) => {
     const data = readData();
-    res.json(data.books);
+    res.json(data.reserves);
 });
 
 app.get("/reserves/:id", (req, res) => {
@@ -54,48 +49,47 @@ app.get("/reserves/:id", (req, res) => {
     //Extraiem l'id de l'url recordem que req es un objecte tipus requests
     // que conté l'atribut params i el podem consultar
     const id = parseInt(req.params.id);
-    const reserva = data.reserves.find(() => book.id === id);
-    res.json(book);
+    const reserva = data.reserves.find((reserva) => reserva.id_reserva === id);
+    res.json(reserva);
 });
 
-//Creem un endpoint del tipus post per afegir un llibre
-
-app.post("/books", (req, res) => {
+//Creem un endpoint del tipus post per afegir una nova reserva
+app.post("/reserves", (req, res) => {
     const data = readData();
     const body = req.body;
-    //todo lo que viene en ...body se agrega al nuevo libro
-    const newBook = {
-        id: data.books.length + 1,
+    //todo lo que viene en ...body se agrega a la nueva reserva
+    const novaReserva = {
+        id_reserva: data.reserves.length + 1,
         ...body,
     };
-    data.books.push(newBook);
+    data.reserves.push(novaReserva);
     writeData(data);
-    res.json(newBook);
+    res.json(novaReserva);
 });
 
-app.put("/books/:id", (req, res) => {
+app.put("/reserves/:id", (req, res) => {
     const data = readData();
     const body = req.body;
     const id = parseInt(req.params.id);
-    const bookIndex = data.books.findIndex((book) => book.id === id);
-    data.books[bookIndex] = {
-        ...data.books[bookIndex],
+    console.log("ID", id);
+    const reservaIndex = data.reserves.findIndex((reserva) => reserva.id_reserva === id);
+    data.reserves[reservaIndex] = {
+        ...data.reserves[reservaIndex],
         ...body,
     };
+    console.log("!!!!!!!", data);
     writeData(data);
-    res.json({ message: "Book updated successfully" });
+    res.json({ message: "reserva updated successfully" });
 });
 
-
-//Creem un endpoint per eliminar un llibre
-app.delete("/books/:id", (req, res) => {
+//Creem un endpoint per eliminar una reserva
+app.delete("/reserves/:id", (req, res) => {
     const data = readData();
     const id = parseInt(req.params.id);
-    const bookIndex = data.books.findIndex((book) => book.id === id);
-    //splice esborra a partir de bookIndex, el número de elements
+    const reservaIndex = data.reserves.findIndex((reserva) => reserva.id_reserva === id);
+    //splice esborra a partir de reservaIndex, el número de elements
     // que li indiqui al segon argument, en aquest cas 1
-    data.books.splice(bookIndex, 1);
+    data.reserves.splice(reservaIndex, 1);
     writeData(data);
-    res.json({ message: "Book deleted successfully" });
+    res.json({ message: "reserva deleted successfully" });
 });
-

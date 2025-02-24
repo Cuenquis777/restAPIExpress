@@ -1,101 +1,100 @@
-
-// Importar librerias
+// Importar librerías
 import express from "express";
 import fs from "fs";
 import bodyParser from "body-parser";
 
-// Esta linia crea el servidor
+// Esta línea crea el servidor
 const app = express();
 
-// Esta linia escuchara y convertira en archivos json
+// Esta línea escuchará y convertirá en archivos JSON
 app.use(bodyParser.json());
 
-
-// Usamos try catch para manejar errores a la hora de leer el archivo
+// Usamos try-catch para manejar errores al leer el archivo
 const readData = () => {
     try {
-        const data = fs.readFileSync("./db.json");
-        // Convertimos el archivo a json
+        const data = fs.readFileSync("./DB/recursos.json");
+        // Convertimos el archivo a JSON
         return JSON.parse(data);
     } catch (error) {
         console.error(error);
     }
 };
 
-
-
-// Usamos try catch para manejar errores a la hora de escribir el archivo
+// Usamos try-catch para manejar errores al escribir el archivo
 const writeData = (data) => {
     try {
-        fs.writeFileSync("./db.json", JSON.stringify(data));
+        fs.writeFileSync("./DB/recursos.json", JSON.stringify(data));
     } catch (error) {
         console.error(error);
     }
 };
 
-
 // Cuando alguien llegue a la ruta "/", le devolveremos un mensaje
 app.get("/", (req, res) => {
-    res.send("Hola mundo mi primer servidor con Node.js");
+    res.send("Hola mundo, mi primer servidor con Node.js");
 });
 
-// Funcio escoltar puerto 3000 ("Arranque")
+// Función para escuchar el puerto 3000 ("Arranque")
 app.listen(3000, () => {
     console.log("Servidor iniciado en el puerto 3000");
 });
 
-app.get("/books", (req, res) => {
+// Obtener todos los recursos
+app.get("/recursos", (req, res) => {
     const data = readData();
-    res.json(data.books);
+    res.json(data.recursos);
 });
 
-app.get("/books/:id", (req, res) => {
+// Obtener un recurso por ID
+app.get("/recursos/:id", (req, res) => {
     const data = readData();
-    //Extraiem l'id de l'url recordem que req es un objecte tipus requests
-    // que conté l'atribut params i el podem consultar
     const id = parseInt(req.params.id);
-    const book = data.books.find((book) => book.id === id);
-    res.json(book);
+    const recurso = data.recursos.find((recurso) => recurso.recursos_id === id);
+    res.json(recurso);
 });
 
-//Creem un endpoint del tipus post per afegir un llibre
-
-app.post("/books", (req, res) => {
+// Crear un nuevo recurso
+app.post("/recursos", (req, res) => {
     const data = readData();
     const body = req.body;
-    //todo lo que viene en ...body se agrega al nuevo libro
-    const newBook = {
-        id: data.books.length + 1,
+    // Agregar nuevo recurso con ID autoincremental
+    const newRecurso = {
+        recursos_id: data.recursos.length > 0 ? data.recursos[data.recursos.length - 1].recursos_id + 1 : 1,
         ...body,
     };
-    data.books.push(newBook);
+    data.recursos.push(newRecurso);
     writeData(data);
-    res.json(newBook);
+    res.json(newRecurso);
 });
 
-app.put("/books/:id", (req, res) => {
+// Actualizar un recurso existente
+app.put("/recursos/:id", (req, res) => {
     const data = readData();
     const body = req.body;
     const id = parseInt(req.params.id);
-    const bookIndex = data.books.findIndex((book) => book.id === id);
-    data.books[bookIndex] = {
-        ...data.books[bookIndex],
-        ...body,
-    };
-    writeData(data);
-    res.json({ message: "Book updated successfully" });
+    const recursoIndex = data.recursos.findIndex((recurso) => recurso.recursos_id === id);
+    if (recursoIndex !== -1) {
+        data.recursos[recursoIndex] = {
+            ...data.recursos[recursoIndex],
+            ...body,
+        };
+        writeData(data);
+        res.json({ message: "Recurso actualizado correctamente" });
+    } else {
+        res.status(404).json({ message: "Recurso no encontrado" });
+    }
 });
 
-
-//Creem un endpoint per eliminar un llibre
-app.delete("/books/:id", (req, res) => {
+// Eliminar un recurso
+app.delete("/recursos/:id", (req, res) => {
     const data = readData();
     const id = parseInt(req.params.id);
-    const bookIndex = data.books.findIndex((book) => book.id === id);
-    //splice esborra a partir de bookIndex, el número de elements
-    // que li indiqui al segon argument, en aquest cas 1
-    data.books.splice(bookIndex, 1);
-    writeData(data);
-    res.json({ message: "Book deleted successfully" });
+    const recursoIndex = data.recursos.findIndex((recurso) => recurso.recursos_id === id);
+    if (recursoIndex !== -1) {
+        data.recursos.splice(recursoIndex, 1);
+        writeData(data);
+        res.json({ message: "Recurso eliminado correctamente" });
+    } else {
+        res.status(404).json({ message: "Recurso no encontrado" });
+    }
 });
-

@@ -1,0 +1,28 @@
+GET http://localhost:3000/recursos
+###
+
+GET http://localhost:3000/recursos/214
+###
+
+POST http://localhost:3000/recursos HTTP/1.1
+Content-Type: application/json
+
+{
+  "estat": "Disponible",
+  "hora_inici": "2025-03-01T10:00:00Z",
+  "hora_final": "2025-03-01T12:00:00Z",
+  "data": "2025-03-01",
+  "tipo": "Equipamiento"
+}
+###
+
+PUT http://localhost:3000/recursos/213 HTTP/1.1
+Content-Type: application/json
+
+{
+  "estat": "Reservat",
+  "hora_final": "2025-02-20T13:00:00Z"
+}
+###
+
+DELETE http://localhost:3000/recursos/215 HTTP/1.1
