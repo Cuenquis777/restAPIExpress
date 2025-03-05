@@ -65,6 +65,8 @@ app.post("/notificacions", (req, res) => {
     writeData(data);
     res.json(newNotification);
 });
+  
+
 
 // Actualizar una notificación
 app.put("/notificacions/:id", (req, res) => {
